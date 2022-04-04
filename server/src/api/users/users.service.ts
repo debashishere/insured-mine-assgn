@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as mongoose from 'mongoose'
+import { UsersRepository } from './users.repositoy';
+import { IUser } from './interface/users.interfaces';
+import { UserDocument } from './schema/users.schema';
+import { Model } from 'mongoose'
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly usersRepository: UsersRepository) { }
+
+  getModelInstance(): Model<UserDocument> {
+    return this.usersRepository.getModelInstance()
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async create(createUserDto: CreateUserDto) {
+    return this.usersRepository.create(createUserDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findAll() {
+    return this.usersRepository.findAll();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(
+    _id: mongoose.Types.ObjectId)
+    : Promise<IUser> {
+    return this.usersRepository.findOne(_id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(
+    _id: mongoose.Types.ObjectId,
+    updateUserDto: UpdateUserDto) {
+    return this.usersRepository.update(_id, updateUserDto);
+  }
+
+  async remove(_id: mongoose.Types.ObjectId) {
+    return this.usersRepository.deleteOne(_id);
   }
 }

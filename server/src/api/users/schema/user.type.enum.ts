@@ -1,6 +1,4 @@
 
-
-
 export enum USER_TYPE {
-  ACTIVE_CLINT = "Active Client"
+  ACTIVE_CLIENT = "Active Client"
 }

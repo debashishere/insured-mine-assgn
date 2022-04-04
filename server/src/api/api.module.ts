@@ -6,7 +6,12 @@ import { CarriersModule } from './carriers/carriers.module';
 import { PoliciesModule } from './policies/policies.module';
 
 @Module({
-  imports: [UsersModule, AgentsModule, LobModule, CarriersModule, PoliciesModule],
+  imports: [
+    UsersModule,
+    AgentsModule,
+    LobModule,
+    CarriersModule,
+    PoliciesModule],
   providers: [],
 })
 export class ApiModule { }

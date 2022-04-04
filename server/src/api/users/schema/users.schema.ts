@@ -34,3 +34,4 @@ export class User implements IUser {
 
 }
 
+export const UserSchema = SchemaFactory.createForClass(User)
