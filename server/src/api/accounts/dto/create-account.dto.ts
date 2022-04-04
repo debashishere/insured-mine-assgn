@@ -70,8 +70,9 @@ export class CreateAccountDto {
   @ApiProperty({ required: false })
   policyMode?: POLICY_MODE;
 
-  public static from(dto: Partial<CreateAccountDto>) {
+  public static from(dto: CreateAccountDto) {
     const it = new CreateAccountDto();
+    it._id = dto._id;
     it.user = dto.user;
     it.account_type = dto.account_type;
     it.account_name = dto.account_name;
@@ -84,8 +85,9 @@ export class CreateAccountDto {
     return it;
   }
 
-  public static FromEntity(entity: AccountDocument): IAccount {
+  public static fromEntity(entity: AccountDocument): IAccount {
     return this.from({
+      _id: entity._id,
       user: entity.user,
       account_type: entity.account_type,
       account_name: entity.account_name,

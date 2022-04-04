@@ -8,9 +8,9 @@ import { IAddress } from '../interface/address.interface';
 
 export type UserDocument = User & Document;
 
-
 @Schema({ timestamps: true })
 export class User implements IUser {
+
   @Prop()
   firstName: string;
 

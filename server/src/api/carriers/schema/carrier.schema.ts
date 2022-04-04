@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ICarrier } from "../interfaces/carrier.interface";
+import { Document } from 'mongoose'
 
 export type CarrierDocument = Carrier & Document;
 

@@ -77,7 +77,7 @@ export class CreateUserDto {
   }
 
 
-  public static FromEntity(entity: UserDocument): IUser {
+  public static fromEntity(entity: UserDocument): IUser {
     return this.from({
       _id: entity._id,
       firstName: entity.firstName,

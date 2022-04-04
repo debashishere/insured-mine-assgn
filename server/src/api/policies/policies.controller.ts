@@ -1,34 +1,37 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PoliciesService } from './policies.service';
+import * as mongoose from 'mongoose'
 import { CreatePolicyDto } from './dto/create-policy.dto';
 import { UpdatePolicyDto } from './dto/update-policy.dto';
+import { PoliciesService } from './policies.service';
 
 @Controller('policies')
 export class PoliciesController {
-  constructor(private readonly policiesService: PoliciesService) {}
+  constructor(private readonly usersService: PoliciesService) { }
 
   @Post()
   create(@Body() createPolicyDto: CreatePolicyDto) {
-    return this.policiesService.create(createPolicyDto);
+    return this.usersService.create(createPolicyDto);
   }
 
   @Get()
   findAll() {
-    return this.policiesService.findAll();
+    return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.policiesService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.usersService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePolicyDto: UpdatePolicyDto) {
-    return this.policiesService.update(+id, updatePolicyDto);
+  @Patch(':_id')
+  update(@Param('_id')
+  _id: mongoose.Types.ObjectId,
+    @Body() updatePolicyDto: UpdatePolicyDto) {
+    return this.usersService.update(_id, updatePolicyDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.policiesService.remove(+id);
+  @Delete(':_id')
+  remove(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.usersService.remove(_id);
   }
 }

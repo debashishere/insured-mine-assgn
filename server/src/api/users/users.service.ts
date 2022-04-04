@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as mongoose from 'mongoose'
@@ -11,15 +11,28 @@ import { Model } from 'mongoose'
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) { }
 
+  async findOneById(
+    _id: mongoose.Types.ObjectId)
+    : Promise<IUser> {
+    const found = await this.usersRepository.findOne(_id);
+    if (!found) {
+      throw new NotFoundException(`User Not Found.`)
+    }
+    return found
+  }
+
   getModelInstance(): Model<UserDocument> {
     return this.usersRepository.getModelInstance()
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(
+    createUserDto: CreateUserDto)
+    : Promise<IUser> {
     return this.usersRepository.create(createUserDto)
   }
 
-  async findAll() {
+  async findAll()
+    : Promise<IUser[]> {
     return this.usersRepository.findAll();
   }
 
@@ -31,11 +44,17 @@ export class UsersService {
 
   async update(
     _id: mongoose.Types.ObjectId,
-    updateUserDto: UpdateUserDto) {
+    updateUserDto: UpdateUserDto)
+    : Promise<IUser> {
+    await this.findOneById(_id)
     return this.usersRepository.update(_id, updateUserDto);
   }
 
-  async remove(_id: mongoose.Types.ObjectId) {
+  async remove(
+    _id: mongoose.Types.ObjectId
+  )
+    : Promise<void> {
+    await this.findOneById(_id)
     return this.usersRepository.deleteOne(_id);
   }
 }

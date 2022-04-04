@@ -1,34 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete
+} from '@nestjs/common';
+import * as mongoose from 'mongoose'
 import { AgentsService } from './agents.service';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
 
-@Controller('agents')
+@Controller('Agents')
 export class AgentsController {
-  constructor(private readonly agentsService: AgentsService) {}
+  constructor(private readonly AgentsService: AgentsService) { }
 
   @Post()
   create(@Body() createAgentDto: CreateAgentDto) {
-    return this.agentsService.create(createAgentDto);
+    return this.AgentsService.create(createAgentDto);
   }
 
   @Get()
   findAll() {
-    return this.agentsService.findAll();
+    return this.AgentsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.agentsService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.AgentsService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAgentDto: UpdateAgentDto) {
-    return this.agentsService.update(+id, updateAgentDto);
+  @Patch(':_id')
+  update(@Param('_id')
+  _id: mongoose.Types.ObjectId,
+    @Body() updateAgentDto: UpdateAgentDto) {
+    return this.AgentsService.update(_id, updateAgentDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.agentsService.remove(+id);
+  @Delete(':_id')
+  remove(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.AgentsService.remove(_id);
   }
 }

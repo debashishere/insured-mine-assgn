@@ -40,7 +40,7 @@ export class CreateAgentDto {
 
   public static FromEntity(entity: AgentDocument): IAgent {
     return this.from({
-      _id: entity._id;
+      _id: entity._id,
       name: entity.name,
       producer: entity.producer,
     });

@@ -3,11 +3,14 @@ import { IAccount } from "../interface/account.interface";
 import * as mongoose from 'mongoose'
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { POLICY_MODE } from "../../policies/schema/policy-mode.enum";
+import { Document } from 'mongoose'
+
 
 export type AccountDocument = Account & Document;
 
 @Schema({ timestamps: true })
 export class Account implements IAccount {
+
   @Prop()
   user: mongoose.Types.ObjectId
 

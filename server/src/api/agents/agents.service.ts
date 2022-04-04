@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
+import * as mongoose from 'mongoose'
+import { Model } from 'mongoose'
+import { UpdateAccountDto } from '../accounts/dto/update-account.dto';
+import { AgentsRepository } from './agents.repository';
 import { CreateAgentDto } from './dto/create-agent.dto';
-import { UpdateAgentDto } from './dto/update-agent.dto';
+import { IAgent } from './interface/agent.interface';
+import { AgentDocument } from './schema/agents.schema';
+
 
 @Injectable()
 export class AgentsService {
-  create(createAgentDto: CreateAgentDto) {
-    return 'This action adds a new agent';
+  constructor(private readonly agentsRepository: AgentsRepository) { }
+
+  getModelInstance(): Model<AgentDocument> {
+    return this.agentsRepository.getModelInstance()
   }
 
-  findAll() {
-    return `This action returns all agents`;
+  async create(createAgentDto: CreateAgentDto) {
+    return this.agentsRepository.create(createAgentDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} agent`;
+  async findAll() {
+    return this.agentsRepository.findAll();
   }
 
-  update(id: number, updateAgentDto: UpdateAgentDto) {
-    return `This action updates a #${id} agent`;
+  async findOne(
+    _id: mongoose.Types.ObjectId)
+    : Promise<IAgent> {
+    return this.agentsRepository.findOne(_id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} agent`;
+  async update(
+    _id: mongoose.Types.ObjectId,
+    updateAcountDto: UpdateAccountDto) {
+    return this.agentsRepository.update(_id, updateAcountDto);
+  }
+
+  async remove(_id: mongoose.Types.ObjectId) {
+    return this.agentsRepository.deleteOne(_id);
   }
 }

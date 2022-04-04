@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { CATAGORY_NAME } from "../../users/schema/catagory-name.enum";
 import { ILOB } from "../interface/lob.interface";
+import { Document } from 'mongoose'
 
 export type LOBDocument = LOB & Document;
 

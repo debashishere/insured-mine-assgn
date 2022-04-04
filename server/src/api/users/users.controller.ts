@@ -3,33 +3,47 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as mongoose from 'mongoose'
+import { IUser } from './interface/users.interfaces';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(
+    @Body() createUserDto: CreateUserDto)
+    : Promise<IUser> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  findAll()
+    : Promise<IUser[]> {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: mongoose.Types.ObjectId) {
-    return this.usersService.findOne(id);
+  @Get(':_id')
+  findOne(
+    @Param('_id')
+    _id: mongoose.Types.ObjectId)
+    : Promise<IUser> {
+    return this.usersService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: mongoose.Types.ObjectId, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  @Patch(':_id')
+  update(
+    @Param('_id')
+    _id: mongoose.Types.ObjectId,
+    @Body() updateUserDto: UpdateUserDto)
+    : Promise<IUser> {
+    return this.usersService.update(_id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: mongoose.Types.ObjectId) {
-    return this.usersService.remove(id);
+  @Delete(':_id')
+  remove(
+    @Param('_id')
+    _id: mongoose.Types.ObjectId)
+    : Promise<void> {
+    return this.usersService.remove(_id);
   }
 }

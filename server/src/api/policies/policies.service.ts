@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePolicyDto } from './dto/create-policy.dto';
 import { UpdatePolicyDto } from './dto/update-policy.dto';
+import * as mongoose from 'mongoose'
+import { PoliciesRepository } from './policies.repository';
+import { PolicyDocument } from './schema/policy.schema';
+import { IPolicy } from './interface/policy.interface';
+import { Model } from 'mongoose'
 
 @Injectable()
 export class PoliciesService {
-  create(createPolicyDto: CreatePolicyDto) {
-    return 'This action adds a new policy';
+  constructor(private readonly policiesRepository: PoliciesRepository) { }
+
+  getModelInstance(): Model<PolicyDocument> {
+    return this.policiesRepository.getModelInstance()
   }
 
-  findAll() {
-    return `This action returns all policies`;
+  async create(
+    createPolicyDto: CreatePolicyDto)
+    : Promise<IPolicy> {
+    return this.policiesRepository.create(createPolicyDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} policy`;
+  async findAll()
+    : Promise<IPolicy[]> {
+    return this.policiesRepository.findAll();
   }
 
-  update(id: number, updatePolicyDto: UpdatePolicyDto) {
-    return `This action updates a #${id} policy`;
+  async findOne(
+    _id: mongoose.Types.ObjectId)
+    : Promise<IPolicy> {
+    return this.policiesRepository.findOne(_id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} policy`;
+  async update(
+    _id: mongoose.Types.ObjectId,
+    updatePolicyDto: UpdatePolicyDto)
+    : Promise<IPolicy> {
+    return this.policiesRepository.update(_id, updatePolicyDto);
+  }
+
+  async remove(_id: mongoose.Types.ObjectId) {
+    return this.policiesRepository.deleteOne(_id);
   }
 }

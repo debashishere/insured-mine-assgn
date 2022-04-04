@@ -43,8 +43,9 @@ export class CreatePolicyDto {
     return it;
   }
 
-  public static FromEntity(entity: PolicyDocument): IPolicy {
+  public static fromEntity(entity: PolicyDocument): IPolicy {
     return this.from({
+      _id: entity._id,
       policy_num: entity.policy_num,
       policy_type: entity.policy_type,
       availableMode: entity.availableMode,

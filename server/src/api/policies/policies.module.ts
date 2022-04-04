@@ -3,6 +3,7 @@ import { PoliciesService } from './policies.service';
 import { PoliciesController } from './policies.controller';
 import { PolicySchema } from './schema/policy.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PoliciesRepository } from './policies.repository'
 
 @Module({
   imports: [
@@ -14,6 +15,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     )
   ],
   controllers: [PoliciesController],
-  providers: [PoliciesService]
+  providers: [
+    PoliciesService,
+    PoliciesRepository
+  ]
 })
 export class PoliciesModule { }
