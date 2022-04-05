@@ -11,7 +11,8 @@ import { UpdateUserDto } from './dto/update-user.dto'
 export class UsersRepository {
   constructor(
     @InjectModel('User')
-    private userModel: Model<UserDocument>
+    private userModel
+      : Model<UserDocument>
   ) { }
 
   getModelInstance(): Model<UserDocument> {

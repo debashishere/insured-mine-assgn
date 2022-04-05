@@ -3,9 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import helmet from "helmet";
-import * as csurf from 'csurf';
-import * as cookieParser from 'cookie-parser';
+// import helmet from "helmet";
+// import * as csurf from 'csurf';
+// import * as cookieParser from 'cookie-parser';
 
 
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -16,9 +16,14 @@ async function bootstrap() {
 
   //*Security*
   app.enableCors(); // Enabling CORS
-  app.use(helmet()); // Common security prevention using Helmet
-  app.use(cookieParser()); // Pre-req for using  CSRF protection
-  app.use(csurf()); // Prevent Cross-site request forgery attacks
+  // app.use(helmet()); // Common security prevention using Helmet
+
+  // app.use(cookieParser()); // Pre-req for using  CSRF protection
+  // app.use(csurf({ cookie: { httpOnly: true, } })); // Prevent Cross-site request forgery attacks
+  // app.use((req, res, next) => {
+  //   res.cookie('XSRF-TOKEN', req.csrfToken())
+  //   next()
+  // })
 
   app.useGlobalPipes(
     new ValidationPipe({

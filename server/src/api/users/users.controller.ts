@@ -1,13 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as mongoose from 'mongoose'
 import { IUser } from './interface/users.interfaces';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { intercept } from '../../shared/services/file.service';
 
-@Controller('users')
+
+@Controller('api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+  ) { }
 
   @Post()
   create(
@@ -45,5 +50,22 @@ export class UsersController {
     _id: mongoose.Types.ObjectId)
     : Promise<void> {
     return this.usersService.remove(_id);
+  }
+
+
+
+  @Post('/upload')
+  @UseInterceptors(
+    FileInterceptor("csv", intercept())
+  )
+  async uploadFile(
+    @UploadedFile() file,
+  ): Promise<void> {
+    console.log(" file **", file)
+    if (!file) {
+      throw new BadRequestException(`File Expected!`)
+    }
+    await this.usersService.handleUpload(file);
+    // return this.usersService.uploadFile(file, req.body, sharingUser._id);
   }
 }

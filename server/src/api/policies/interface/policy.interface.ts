@@ -8,4 +8,5 @@ export interface IPolicy {
   policy_num: string;
   policy_type: POLICY_TYPE;
   availableMode: POLICY_MODE[];
+  accounts?: mongoose.Types.ObjectId[];
 }

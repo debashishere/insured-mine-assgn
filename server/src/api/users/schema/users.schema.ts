@@ -32,6 +32,10 @@ export class User implements IUser {
   @Prop({ required: false })
   type?: USER_TYPE;
 
+  // account
+  // policies
+
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

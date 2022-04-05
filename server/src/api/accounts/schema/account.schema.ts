@@ -2,8 +2,8 @@ import { ACCOUNT_TYPE } from "./account.type.enum";
 import { IAccount } from "../interface/account.interface";
 import * as mongoose from 'mongoose'
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { POLICY_MODE } from "../../policies/schema/policy-mode.enum";
 import { Document } from 'mongoose'
+import { AccountPolicy } from "./account-policy.schema";
 
 
 export type AccountDocument = Account & Document;
@@ -11,32 +11,21 @@ export type AccountDocument = Account & Document;
 @Schema({ timestamps: true })
 export class Account implements IAccount {
 
-  @Prop()
+  @Prop(
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'User'
+    })
   user: mongoose.Types.ObjectId
 
-  @Prop()
+  @Prop({ ACCOUNT_TYPE })
   account_type: ACCOUNT_TYPE
 
   @Prop()
   account_name: string;
 
-  @Prop({ required: false, default: 0 })
-  premium_amount_written?: number;
-
-  @Prop({ required: false, default: 0 })
-  premium_amount?: number;
-
-  @Prop({ required: false })
-  plicy_start?: Date;
-
-  @Prop({ required: false })
-  policy_end?: Date;
-
-  @Prop({ required: false })
-  agent?: mongoose.Types.ObjectId;
-
-  @Prop({ required: false })
-  policyMode?: POLICY_MODE;
+  @Prop({ AccountPolicy })
+  account_policies?: AccountPolicy[];
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);

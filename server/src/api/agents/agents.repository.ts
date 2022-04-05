@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel, MongooseModule } from "@nestjs/mongoose";
+import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { AgentDocument } from "./schema/agents.schema";

@@ -18,6 +18,10 @@ import { PoliciesRepository } from './policies.repository'
   providers: [
     PoliciesService,
     PoliciesRepository
+  ],
+  exports: [
+    PoliciesService,
+    PoliciesRepository
   ]
 })
 export class PoliciesModule { }

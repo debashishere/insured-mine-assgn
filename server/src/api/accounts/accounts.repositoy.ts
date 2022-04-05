@@ -10,7 +10,9 @@ import { IAccount } from "./interface/account.interface";
 @Injectable()
 export class AccountsRepository {
   constructor(
-    @InjectModel('Account') private AccountModel: Model<AccountDocument>
+    @InjectModel('Account')
+    private AccountModel
+      : Model<AccountDocument>
   ) { }
 
   getModelInstance(): Model<AccountDocument> {

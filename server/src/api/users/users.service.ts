@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as mongoose from 'mongoose'
@@ -6,10 +6,17 @@ import { UsersRepository } from './users.repositoy';
 import { IUser } from './interface/users.interfaces';
 import { UserDocument } from './schema/users.schema';
 import { Model } from 'mongoose'
+import { ParseService } from '../../shared/services/parse.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) { }
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    @Inject(forwardRef(() => ParseService))
+    private readonly parseService: ParseService,
+
+
+  ) { }
 
   async findOneById(
     _id: mongoose.Types.ObjectId)
@@ -57,4 +64,9 @@ export class UsersService {
     await this.findOneById(_id)
     return this.usersRepository.deleteOne(_id);
   }
+
+  async handleUpload(file) {
+    await this.parseService.parseTransform(file)
+  }
+
 }

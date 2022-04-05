@@ -14,6 +14,7 @@ import { IAddress } from "../interface/address.interface";
 import { IPhone } from "../interface/phone.interface";
 import { IUser } from "../interface/users.interfaces";
 import { GENDER } from "../schema/gender.enum";
+import { USER_TYPE } from "../schema/user.type.enum";
 import { UserDocument } from "../schema/users.schema";
 
 export class CreateUserDto {
@@ -60,7 +61,10 @@ export class CreateUserDto {
   @ApiProperty({ required: false })
   address?: IAddress[];
 
-  type
+  @IsOptional()
+  @ApiProperty({ required: false })
+  type?: USER_TYPE
+
 
 
   public static from(dto: Partial<CreateUserDto>) {
