@@ -29,11 +29,11 @@ export class UsersRepository {
 
   async findOne(
     _id: mongoose.Types.ObjectId)
-    : Promise<IUser> {
+    : Promise<UserDocument> {
     const user =
       await this.userModel
         .findById({ _id })
-    return CreateUserDto.fromEntity(user)
+    return user;
   }
 
   async create(

@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose'
 import { AgentDocument } from "./schema/agents.schema";
 import { CreateAgentDto } from "./dto/create-agent.dto";
 import { UpdateAgentDto } from "./dto/update-agent.dto";
+import { IAgent } from "./interface/agent.interface";
 
 @Injectable()
 export class AgentsRepository {
@@ -33,12 +34,13 @@ export class AgentsRepository {
     return
   }
 
-  async create(createAgentDto: CreateAgentDto): Promise<AgentDocument> {
+  async create(
+    createAgentDto: CreateAgentDto)
+    : Promise<IAgent> {
     const data = CreateAgentDto.toEntity(createAgentDto);
     const newAgent = new this.AgentModel(data);
     const createdAgent = await newAgent.save();
-    console.log("created ", createdAgent)
-    return createdAgent
+    return CreateAgentDto.FromEntity(createdAgent)
   }
 
 

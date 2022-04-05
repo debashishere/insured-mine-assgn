@@ -12,21 +12,22 @@ describe('AgentService', () => {
   let service: AgentsService;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        rootMongooseTestModule(),
-        MongooseModule.forFeature([
-          {
-            name: 'Agent',
-            schema: AgentSchema
-          }
-        ])
-      ],
-      providers: [
-        AgentsRepository,
-        AgentsService
-      ]
-    }).compile()
+    const module: TestingModule =
+      await Test.createTestingModule({
+        imports: [
+          rootMongooseTestModule(),
+          MongooseModule.forFeature([
+            {
+              name: 'Agent',
+              schema: AgentSchema
+            }
+          ])
+        ],
+        providers: [
+          AgentsRepository,
+          AgentsService
+        ]
+      }).compile()
     service = module.get<AgentsService>(AgentsService);
   })
 
@@ -43,30 +44,43 @@ describe('AgentService', () => {
 
 
     describe(`CreateAgent`, () => {
-      it('createAgent: should create and return a Agent', async () => {
-        const AgentData = getAgentStub();
-        createdAgent = await service.create(AgentData);
-        expect(createdAgent._id.toString().length).toEqual(24);
+      it('createAgent: should create and return a Agent',
+        async () => {
+          const AgentData = getAgentStub();
+          createdAgent = await service.create(AgentData);
+          expect(
+            createdAgent._id
+              .toString()
+              .length
+          ).toEqual(24);
 
-        const dbAgent: IAgent = await service
-          .getModelInstance()
-          .findById(createdAgent._id);
-        expect(dbAgent._id).toEqual(createdAgent._id);
-      });
+          const dbAgent: IAgent = await service
+            .getModelInstance()
+            .findById(createdAgent._id);
+          expect(dbAgent._id).toEqual(createdAgent._id);
+        });
     })
 
 
     describe(`Get Agent`, () => {
-      it('getAgentById: should get a Agent by id', async () => {
-        const foundAgent: IAgent = await service.findOne(createdAgent._id);
-        expect(foundAgent._id).toEqual(createdAgent._id);
-      });
+      it('getAgentById: should get a Agent by id',
+        async () => {
+          const foundAgent: IAgent =
+            await service.findOne(createdAgent._id);
+          expect(
+            foundAgent._id
+          ).toEqual(createdAgent._id);
+        });
 
 
-      it('getModelInstance: should get Model Instance', async () => {
-        const foundModel = await service.getModelInstance();
-        expect(foundModel.modelName).toEqual('Agent');
-      });
+      it('getModelInstance: should get Model Instance',
+        async () => {
+          const foundModel =
+            await service.getModelInstance();
+          expect(
+            foundModel.modelName
+          ).toEqual('Agent');
+        });
 
       it('getAllAgents: should get All Agents', async () => {
         const foundAgent: IAgent[] = await service.findAll();

@@ -37,6 +37,7 @@ export class CreatePolicyDto {
 
   public static from(dto: CreatePolicyDto) {
     const it = new CreatePolicyDto();
+    it._id = dto._id
     it.policy_num = dto.policy_num
     it.policy_type = dto.policy_type
     it.availableMode = dto.availableMode

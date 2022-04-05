@@ -10,7 +10,8 @@ import { IPolicy } from "./interface/policy.interface";
 @Injectable()
 export class PoliciesRepository {
   constructor(
-    @InjectModel('Policy') private policyModel: Model<PolicyDocument>
+    @InjectModel('Policy')
+    private policyModel: Model<PolicyDocument>
   ) { }
 
   getModelInstance(): Model<PolicyDocument> {
@@ -19,9 +20,9 @@ export class PoliciesRepository {
 
   async findOne(
     _id: mongoose.Types.ObjectId)
-    : Promise<IPolicy> {
-    const pol = await this.policyModel.findById({ _id })
-    return CreatePolicyDto.fromEntity(pol)
+    : Promise<PolicyDocument> {
+    return this.policyModel.findById({ _id })
+
   }
 
   async findAll(): Promise<IPolicy[]> {

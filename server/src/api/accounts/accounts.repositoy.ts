@@ -26,10 +26,9 @@ export class AccountsRepository {
 
   async findOne(
     _id: mongoose.Types.ObjectId)
-    : Promise<IAccount> {
-    const acc = await this.AccountModel
+    : Promise<AccountDocument> {
+    return await this.AccountModel
       .findById({ _id })
-    return CreateAccountDto.fromEntity(acc)
   }
 
   async deleteOne(
