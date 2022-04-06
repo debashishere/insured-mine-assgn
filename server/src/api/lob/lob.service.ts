@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose'
 import { CreateLobDto } from './dto/create-lob.dto';
 import { UpdateLobDto } from './dto/update-lob.dto';
@@ -6,11 +6,13 @@ import { ILOB } from './interface/lob.interface';
 import { LOBRepository } from './lob.repository';
 import { LOBDocument } from './schema/lob.schema';
 import * as mongoose from 'mongoose'
+import { CarriersService } from '../carriers/carriers.service';
 
 @Injectable()
 export class LOBService {
   constructor(
-    private readonly lobRepository: LOBRepository
+    private readonly lobRepository: LOBRepository,
+    private readonly carriersService: CarriersService,
   ) { }
 
   getModelInstance(): Model<LOBDocument> {
@@ -20,9 +22,12 @@ export class LOBService {
   async create(
     createLOBDto: CreateLobDto)
     : Promise<ILOB> {
-    const { name } = createLOBDto;
-    const foundLOB = this.lobRepository.findOneByName(name);
-
+    const { name, carrier } = createLOBDto;
+    const foundCarrier = await this.carriersService.findOne(carrier)
+    if (!foundCarrier) {
+      throw new BadRequestException(`Carrier not found.`)
+    }
+    const foundLOB = await this.lobRepository.findOneByName(name);
     if (foundLOB) {
       return foundLOB
     } else {

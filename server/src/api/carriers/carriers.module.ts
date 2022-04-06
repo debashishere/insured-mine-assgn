@@ -14,7 +14,6 @@ import { LobModule } from '../lob/lob.module'
         schema: CarrierSchema
       }]
     ),
-    LobModule
   ],
   controllers: [CarriersController],
   providers: [

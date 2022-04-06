@@ -13,7 +13,7 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { IAccount } from './interface/account.interface';
 
-@Controller('accounts')
+@Controller('api/accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) { }
 

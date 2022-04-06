@@ -61,11 +61,9 @@ export class UsersController {
   async uploadFile(
     @UploadedFile() file,
   ): Promise<void> {
-    console.log(" file **", file)
     if (!file) {
       throw new BadRequestException(`File Expected!`)
     }
-    await this.usersService.handleUpload(file);
-    // return this.usersService.uploadFile(file, req.body, sharingUser._id);
+    return await this.usersService.handleUpload(file);
   }
 }

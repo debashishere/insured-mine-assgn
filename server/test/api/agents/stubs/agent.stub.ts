@@ -5,7 +5,7 @@ import { CreateAgentDto } from "../../../../src/api/agents/dto/create-agent.dto"
 export const getAgentStub = (): CreateAgentDto => {
   const data = CreateAgentDto.toEntity({
     name: "Some Name",
-    producer: "Some prod",
+    producers: ["Some prod"],
   })
 
   return data

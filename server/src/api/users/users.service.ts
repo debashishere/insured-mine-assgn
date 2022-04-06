@@ -8,6 +8,8 @@ import { UserDocument } from './schema/users.schema';
 import { Model } from 'mongoose'
 import { ParseService } from '../../shared/services/parse.service';
 
+
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -35,6 +37,11 @@ export class UsersService {
   async create(
     createUserDto: CreateUserDto)
     : Promise<IUser> {
+    const { email } = createUserDto;
+    const foundUser = await this.usersRepository.findOneByEmial(email)
+    if (foundUser) {
+      return foundUser
+    }
     return this.usersRepository.create(createUserDto)
   }
 
@@ -66,7 +73,7 @@ export class UsersService {
   }
 
   async handleUpload(file) {
-    await this.parseService.parseTransform(file)
+    return this.parseService.parseTransform(file)
   }
 
 }

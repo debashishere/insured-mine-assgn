@@ -4,7 +4,7 @@ import { CreatePolicyDto } from './dto/create-policy.dto';
 import { UpdatePolicyDto } from './dto/update-policy.dto';
 import { PoliciesService } from './policies.service';
 
-@Controller('policies')
+@Controller('api/policies')
 export class PoliciesController {
   constructor(private readonly usersService: PoliciesService) { }
 

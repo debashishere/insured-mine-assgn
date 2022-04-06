@@ -24,7 +24,8 @@ import { CarriersModule } from '../carriers/carriers.module';
         schema: UserSchema
       }]
     ),
-    AccountsModule,
+    forwardRef(() => AccountsModule),
+
     PoliciesModule,
     AgentsModule,
     LobModule,
@@ -42,6 +43,12 @@ import { CarriersModule } from '../carriers/carriers.module';
   exports: [
     UsersService,
     UsersRepository,
+    MongooseModule.forFeature(
+      [{
+        name: 'User',
+        schema: UserSchema
+      }]
+    ),
   ]
 })
 export class UsersModule { }

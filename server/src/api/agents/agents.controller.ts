@@ -12,7 +12,7 @@ import { AgentsService } from './agents.service';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
 
-@Controller('Agents')
+@Controller('api/agents')
 export class AgentsController {
   constructor(private readonly AgentsService: AgentsService) { }
 

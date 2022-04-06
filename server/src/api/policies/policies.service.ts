@@ -18,6 +18,12 @@ export class PoliciesService {
   async create(
     createPolicyDto: CreatePolicyDto)
     : Promise<IPolicy> {
+
+    const { policy_num } = createPolicyDto;
+    const foundPolicy = await this.policiesRepository.findOneByNumber(policy_num)
+    if (foundPolicy) {
+      return foundPolicy
+    }
     return this.policiesRepository.create(createPolicyDto)
   }
 

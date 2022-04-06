@@ -28,7 +28,6 @@ import { CarriersService } from "../../api/carriers/carriers.service";
 import { CsvRow } from '../interfaces/csv-row.interface'
 import { AccountArg } from '../interfaces/account-arg.interface'
 
-
 @Injectable()
 export class ParseService {
   constructor(
@@ -43,7 +42,7 @@ export class ParseService {
   ) { }
 
   parseTransform = async (file) => {
-
+    let count = 1;
     const pathToCsv =
       path.resolve(
         __dirname, '../../../', 'csv', file.filename
@@ -57,25 +56,25 @@ export class ParseService {
       )
       // Using the transform function from the formatting stream
       .transform(async (row, next): Promise<void> => {
-        console.log(" transaform ", row)
+        console.log(" ROW NUM ", count,)
 
         // user
         const user = await this.toUser(row)
         const createdUser =
           await this.usersService.create(user)
-        console.log(" created ", createdUser)
+        console.log(`Created User count ${count} Id ${createdUser._id}`)
 
         // agent
-        const agent = await this.toAgent(row);
+        const agent = this.toAgent(row);
         const createdAgent =
           await this.agentsService.create(agent);
-        console.log("created agent", createdAgent)
+        console.log(`created agent count ${count} Id ${createdAgent._id}`)
 
         // policy
-        const policy = await this.toPolicy(row)
+        const policy = this.toPolicy(row)
         const createdPolicy =
           await this.policiesService.create(policy);
-        console.log(" createdPolicy ", createdPolicy)
+        console.log(`Created Policy  count ${count} Id, ${createdPolicy._id}`)
 
         // account
         const args: AccountArg = {
@@ -87,21 +86,23 @@ export class ParseService {
         const account = await this.toAccount(args);
         const createdAcc =
           await this.accountsService.create(account)
-        console.log(" account ", createdAcc)
+        console.log(`Created Account count ${count} Id ${createdAcc._id}`)
 
 
         //carrier
-        const carrier = await this.toCarrier(row);
+        const carrier = this.toCarrier(row);
         const createdCarrier =
           await this.carriersService.create(carrier)
-        console.log(" carrier ", createdCarrier)
+        console.log(`Created Carrier count ${count} Id ${createdCarrier._id}`)
 
         // LOB
-        const lob = await this.toLOB(carrier._id, row);
+        const lob = this.toLOB(createdCarrier._id, row);
         const createdLOB = await this.lobService.create(lob)
-        console.log(" createdLOB ", createdLOB)
+        console.log(`Created  LOB  count ${count} Id ${createdLOB._id}`)
 
-        // next(null,user)
+
+        count++;
+        return next()
 
       })
       .pipe(process.stdout)
@@ -178,8 +179,6 @@ export class ParseService {
     return account
   }
 
-
-
   toPolicy(row: CsvRow) {
     const policy_type = this.getPolicyType(row.policy_type);
     const availableMode = this.getPolicyMode(row.policy_mode)
@@ -210,8 +209,8 @@ export class ParseService {
       name,
       carrier,
     }
-    const agent = CreateLobDto.toEntity(LOBData);
-    return agent
+    const lob = CreateLobDto.toEntity(LOBData);
+    return lob
   }
 
   toCarrier(row: CsvRow) {
@@ -230,7 +229,8 @@ export class ParseService {
   async removeCsv(path: string) {
     fs.unlink(path, (err) => {
       if (err) throw err
-      console.log('path/file.txt was deleted');
+      console.log(`File was deleted`);
+
     });
   }
 
@@ -277,10 +277,6 @@ export class ParseService {
     return <USER_TYPE>t;
   }
 
-  formatToEnum(data: string): string {
-    const slices = data.split(' ').join('_')
-    return slices.toLocaleUpperCase()
-  }
 
   getAccountType = (type: string) => {
     const formated = this.formatToEnum(type);
@@ -295,6 +291,11 @@ export class ParseService {
 
   getLobName(lob: string): CATAGORY_NAME {
     return <CATAGORY_NAME>lob;
+  }
+
+  formatToEnum(data: string): string {
+    const slices = data.split(' ').join('_')
+    return slices.toLocaleUpperCase()
   }
 
   getPolicyMode(mode: string): POLICY_MODE {

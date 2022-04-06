@@ -4,12 +4,13 @@ import { CreateLobDto } from './dto/create-lob.dto';
 import { UpdateLobDto } from './dto/update-lob.dto';
 import * as mongoose from 'mongoose'
 
-@Controller('lob')
+@Controller('api/lobs')
 export class LobController {
   constructor(private readonly lobService: LOBService) { }
 
   @Post()
   create(@Body() createLobDto: CreateLobDto) {
+    console.log(" createLobDto ", createLobDto)
     return this.lobService.create(createLobDto);
   }
 

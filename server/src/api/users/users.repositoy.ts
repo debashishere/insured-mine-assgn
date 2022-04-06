@@ -37,6 +37,17 @@ export class UsersRepository {
     return user;
   }
 
+  async findOneByEmial(
+    email: string)
+    : Promise<UserDocument> {
+    const user =
+      await this.userModel
+        .findOne({ email })
+    return user;
+  }
+
+
+
   async create(
     createUserDto: CreateUserDto)
     : Promise<IUser> {

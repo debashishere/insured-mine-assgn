@@ -4,7 +4,7 @@ import { CarriersService } from './carriers.service';
 import { CreateCarrierDto } from './dto/create-carrier.dto';
 import { UpdateCarrierDto } from './dto/update-carrier.dto';
 
-@Controller('carrier')
+@Controller('api/carriers')
 export class CarriersController {
   constructor(
     private readonly carriersService: CarriersService

@@ -4,6 +4,7 @@ import { LobController } from './lob.controller';
 import { LOBSchema } from './schema/lob.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LOBRepository } from './lob.repository';
+import { CarriersModule } from '../carriers/carriers.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { LOBRepository } from './lob.repository';
         name: 'LOB',
         schema: LOBSchema
       }]
-    )
+    ),
+    CarriersModule
   ],
   controllers: [LobController],
   providers: [

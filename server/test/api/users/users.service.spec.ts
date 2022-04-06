@@ -7,6 +7,21 @@ import { UserSchema } from "../../../src/api/users/schema/users.schema"
 import { UsersRepository } from "../../../src/api/users/users.repositoy"
 import { IUser } from "../../../src/api/users/interface/users.interfaces"
 import { getUserStub } from "./stubs/users.stub"
+import { ParseService } from "../../../src/shared/services/parse.service"
+import { ParsesModule } from "../../../src/shared/services/parse.module"
+import { forwardRef } from "@nestjs/common"
+import { CarriersModule } from "../../../src/api/carriers/carriers.module"
+import { LobModule } from "../../../src/api/lob/lob.module"
+import { AgentsModule } from "../../../src/api/agents/agents.module"
+import { PoliciesModule } from "../../../src/api/policies/policies.module"
+import { UsersModule } from "../../../src/api/users/users.module"
+import { AccountsModule } from "../../../src/api/accounts/accounts.module"
+import { AccountsService } from "../../../src/api/accounts/acounts.service"
+import { PoliciesService } from "../../../src/api/policies/policies.service"
+import { AgentsService } from "../../../src/api/agents/agents.service"
+import { LOBService } from "../../../src/api/lob/lob.service"
+import { CarriersService } from "../../../src/api/carriers/carriers.service"
+import { AccountsRepository } from "../../../src/api/accounts/accounts.repositoy"
 
 describe('UserService', () => {
   let service: UsersService;
@@ -15,16 +30,24 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         rootMongooseTestModule(),
+        // UsersModule,
         MongooseModule.forFeature([
           {
             name: 'User',
             schema: UserSchema
           }
-        ])
+        ]),
+        forwardRef(() => AccountsModule),
+        forwardRef(() => PoliciesModule),
+        forwardRef(() => ParsesModule),
+        AgentsModule,
+        LobModule,
+        CarriersModule,
+
       ],
       providers: [
         UsersRepository,
-        UsersService
+        UsersService,
       ]
     }).compile()
     service = module.get<UsersService>(UsersService);

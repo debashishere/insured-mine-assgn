@@ -25,6 +25,13 @@ export class PoliciesRepository {
 
   }
 
+  async findOneByNumber(
+    policy_num: string)
+    : Promise<PolicyDocument> {
+    return this.policyModel.findOne({ policy_num })
+
+  }
+
   async findAll(): Promise<IPolicy[]> {
     const policies = await this.policyModel.find({})
     return policies.map(pol => CreatePolicyDto.fromEntity(pol))
