@@ -20,17 +20,17 @@ export class Policy implements IPolicy {
   @Prop()
   availableMode: POLICY_MODE[];
 
-  @Prop({
-    type: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: 'User'
-      }
-    ],
-    required: false,
-    default: []
-  })
-  accounts?: mongoose.Types.ObjectId[]
+  // @Prop({
+  //   type: [
+  //     {
+  //       type: mongoose.Types.ObjectId,
+  //       ref: 'User'
+  //     }
+  //   ],
+  //   required: false,
+  //   default: []
+  // })
+  // accounts?: mongoose.Types.ObjectId[]
 
 }
 

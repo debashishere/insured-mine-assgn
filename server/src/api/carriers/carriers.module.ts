@@ -4,6 +4,7 @@ import { CarriersController } from './carriers.controller';
 import { CarrierSchema } from './schema/carrier.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CarriersRepository } from './carriers.repository';
+import { LobModule } from '../lob/lob.module'
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { CarriersRepository } from './carriers.repository';
         name: 'Carrier',
         schema: CarrierSchema
       }]
-    )
+    ),
+    LobModule
   ],
   controllers: [CarriersController],
   providers: [
@@ -21,7 +23,13 @@ import { CarriersRepository } from './carriers.repository';
   ],
   exports: [
     CarriersService,
-    CarriersRepository
+    CarriersRepository,
+    MongooseModule.forFeature(
+      [{
+        name: 'Carrier',
+        schema: CarrierSchema
+      }]
+    )
   ]
 })
 export class CarriersModule { }

@@ -15,6 +15,19 @@ import { AgentsRepository } from './agents.repository';
     )
   ],
   controllers: [AgentsController],
-  providers: [AgentsService, AgentsRepository]
+  providers: [
+    AgentsService,
+    AgentsRepository,
+  ],
+  exports: [
+    MongooseModule.forFeature(
+      [{
+        name: 'Agent',
+        schema: AgentSchema
+      }]
+    ),
+    AgentsService,
+    AgentsRepository,
+  ]
 })
 export class AgentsModule { }

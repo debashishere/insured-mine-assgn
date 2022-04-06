@@ -22,11 +22,17 @@ export class CreateLobDto {
   @ApiProperty()
   name: CATAGORY_NAME
 
+  @IsMongoId()
+  @IsNotEmpty()
+  @ApiProperty()
+  carrier: mongoose.Types.ObjectId
+
 
   public static from(dto: CreateLobDto) {
     const it = new CreateLobDto();
     it._id = dto._id;
     it.name = dto.name;
+    it.carrier = dto.carrier
     return it;
   }
 
@@ -34,12 +40,14 @@ export class CreateLobDto {
     return this.from({
       _id: entity._id,
       name: entity.name,
+      carrier: entity.carrier
     });
   }
 
   public static toEntity(dto: CreateLobDto) {
     const it = new CreateLobDto();
     it.name = dto.name
+    it.carrier = dto.carrier
     return it;
   }
 

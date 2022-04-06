@@ -7,11 +7,24 @@ import { AccountsRepository } from '../../api/accounts/accounts.repositoy';
 import { ParseService } from './parse.service';
 import { PoliciesModule } from '../../api/policies/policies.module';
 import { PoliciesService } from '../../api/policies/policies.service';
+import { AgentsModule } from '../../api/agents/agents.module';
+import { AgentsService } from '../../api/agents/agents.service';
+import { AgentsRepository } from '../../api/agents/agents.repository';
+import { LOBRepository } from '../../api/lob/lob.repository';
+import { LOBService } from '../../api/lob/lob.service';
+import { LobModule } from '../../api/lob/lob.module';
+import { CarriersModule } from '../../api/carriers/carriers.module';
+import { CarriersService } from '../../api/carriers/carriers.service';
+import { CarriersRepository } from '../../api/carriers/carriers.repository';
+
 @Module({
   imports: [
     forwardRef(() => UsersModule),
+    AgentsModule,
     AccountsModule,
     PoliciesModule,
+    LobModule,
+    CarriersModule,
   ],
 
   providers: [
@@ -19,7 +32,13 @@ import { PoliciesService } from '../../api/policies/policies.service';
     UsersService,
     AccountsService,
     AccountsRepository,
-    PoliciesService
+    PoliciesService,
+    AgentsService,
+    AgentsRepository,
+    LOBService,
+    LOBRepository,
+    CarriersService,
+    CarriersRepository
   ],
   exports: [
     ParseService

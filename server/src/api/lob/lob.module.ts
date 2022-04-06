@@ -20,6 +20,12 @@ import { LOBRepository } from './lob.repository';
     LOBRepository
   ],
   exports: [
+    MongooseModule.forFeature(
+      [{
+        name: 'LOB',
+        schema: LOBSchema
+      }]
+    ),
     LOBService,
     LOBRepository
   ]

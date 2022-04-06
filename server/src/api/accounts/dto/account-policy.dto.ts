@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
 } from "class-validator";
 import * as mongoose from 'mongoose'
 import { POLICY_MODE } from "../../policies/schema/policy-mode.enum";
@@ -20,6 +21,11 @@ export class AccountPolicyDto {
   @ApiProperty()
   @IsMongoId()
   policy_id: mongoose.Types.ObjectId;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  producer: string;
 
   @IsNumber()
   @IsOptional()
@@ -63,10 +69,14 @@ export class AccountPolicyDto {
     it.policy_end = dto.policy_end;
     it.agent = dto.agent;
     it.policyMode = dto.policyMode;
+    it.producer = dto.producer;
+
     return it;
   }
 
-  public static fromEntity(entity: AccountPolicyDocument): IAccountPolicy {
+  public static fromEntity(
+    entity: AccountPolicyDocument)
+    : IAccountPolicy {
     return this.from({
       policy_id: entity.policy_id,
       premium_amount_written: entity.premium_amount_written,
@@ -75,6 +85,7 @@ export class AccountPolicyDto {
       policy_end: entity.policy_end,
       agent: entity.agent,
       policyMode: entity.policyMode,
+      producer: entity.producer,
     });
   }
 
@@ -86,6 +97,7 @@ export class AccountPolicyDto {
     it.policy_end = dto.policy_end;
     it.agent = dto.agent;
     it.policyMode = dto.policyMode;
+    it.producer = dto.producer;
     return it;
   }
 

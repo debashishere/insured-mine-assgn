@@ -9,37 +9,47 @@ import * as mongoose from 'mongoose'
 
 @Injectable()
 export class LOBService {
-  constructor(private readonly policiesRepository: LOBRepository) { }
+  constructor(
+    private readonly lobRepository: LOBRepository
+  ) { }
 
   getModelInstance(): Model<LOBDocument> {
-    return this.policiesRepository.getModelInstance()
+    return this.lobRepository.getModelInstance()
   }
 
   async create(
     createLOBDto: CreateLobDto)
     : Promise<ILOB> {
-    return this.policiesRepository.create(createLOBDto)
+    const { name } = createLOBDto;
+    const foundLOB = this.lobRepository.findOneByName(name);
+
+    if (foundLOB) {
+      return foundLOB
+    } else {
+      return this.lobRepository.create(createLOBDto)
+    }
   }
+
 
   async findAll()
     : Promise<ILOB[]> {
-    return this.policiesRepository.findAll();
+    return this.lobRepository.findAll();
   }
 
   async findOne(
     _id: mongoose.Types.ObjectId)
     : Promise<ILOB> {
-    return this.policiesRepository.findOne(_id);
+    return this.lobRepository.findOne(_id);
   }
 
   async update(
     _id: mongoose.Types.ObjectId,
     updateLOBDto: UpdateLobDto)
     : Promise<ILOB> {
-    return this.policiesRepository.update(_id, updateLOBDto);
+    return this.lobRepository.update(_id, updateLOBDto);
   }
 
   async remove(_id: mongoose.Types.ObjectId) {
-    return this.policiesRepository.deleteOne(_id);
+    return this.lobRepository.deleteOne(_id);
   }
 }

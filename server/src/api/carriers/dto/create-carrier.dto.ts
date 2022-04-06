@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsArray,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
@@ -22,22 +23,18 @@ export class CreateCarrierDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsArray()
   @ApiProperty()
-  catagory: string;
+  csrs: string[];
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  csr: string;
+
 
 
   public static from(dto: CreateCarrierDto) {
     const it = new CreateCarrierDto();
     it._id = dto._id;
     it.name = dto.name;
-    it.catagory = dto.catagory;
-    it.csr = dto.csr;
+    it.csrs = dto.csrs;
     return it;
   }
 
@@ -45,16 +42,14 @@ export class CreateCarrierDto {
     return this.from({
       _id: entity._id,
       name: entity.name,
-      catagory: entity.catagory,
-      csr: entity.csr,
+      csrs: entity.csrs,
     });
   }
 
   public static toEntity(dto: CreateCarrierDto) {
     const it = new CreateCarrierDto();
     it.name = dto.name;
-    it.catagory = dto.catagory;
-    it.csr = dto.csr;
+    it.csrs = dto.csrs;
     return it;
   }
 

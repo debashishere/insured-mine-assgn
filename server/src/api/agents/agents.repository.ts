@@ -27,6 +27,13 @@ export class AgentsRepository {
     return this.AgentModel.findById({ _id })
   }
 
+  async findOneByName(
+    name: string)
+    : Promise<AgentDocument> {
+    return this.AgentModel
+      .findOne({ name })
+  }
+
   async deleteOne(
     _id: mongoose.Types.ObjectId
   ): Promise<void> {
@@ -40,7 +47,7 @@ export class AgentsRepository {
     const data = CreateAgentDto.toEntity(createAgentDto);
     const newAgent = new this.AgentModel(data);
     const createdAgent = await newAgent.save();
-    return CreateAgentDto.FromEntity(createdAgent)
+    return CreateAgentDto.fromEntity(createdAgent)
   }
 
 

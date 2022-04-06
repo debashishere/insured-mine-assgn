@@ -33,6 +33,13 @@ export class CarriersRepository {
       .findById({ _id })
   }
 
+  async findOneByName(
+    name: string)
+    : Promise<CarrierDocument> {
+    return this.CarrierModel
+      .findOne({ name })
+  }
+
   async deleteOne(
     _id: mongoose.Types.ObjectId
   ): Promise<void> {

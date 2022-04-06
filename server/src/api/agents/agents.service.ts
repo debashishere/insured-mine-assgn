@@ -17,7 +17,14 @@ export class AgentsService {
   }
 
   async create(createAgentDto: CreateAgentDto) {
-    return this.agentsRepository.create(createAgentDto)
+    const { name } = createAgentDto
+    const foundAgent = await this.agentsRepository
+      .findOneByName(name);
+    if (foundAgent) {
+      return foundAgent
+    } else {
+      return this.agentsRepository.create(createAgentDto)
+    }
   }
 
   async findAll() {
@@ -39,4 +46,5 @@ export class AgentsService {
   async remove(_id: mongoose.Types.ObjectId) {
     return this.agentsRepository.deleteOne(_id);
   }
+
 }

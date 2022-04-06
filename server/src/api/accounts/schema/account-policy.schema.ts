@@ -9,6 +9,9 @@ export type AccountPolicyDocument = AccountPolicy & Document;
 
 @Schema({ timestamps: true })
 export class AccountPolicy implements IAccountPolicy {
+  @Prop()
+  producer: string;
+
   @Prop(
     {
       type: mongoose.Types.ObjectId,

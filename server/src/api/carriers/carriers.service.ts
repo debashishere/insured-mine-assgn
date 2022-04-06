@@ -18,7 +18,13 @@ export class CarriersService {
   async create(
     createAcountDto: CreateCarrierDto)
     : Promise<ICarrier> {
-    return this.CarriersRepository.create(createAcountDto)
+    const { name } = createAcountDto
+    const found = await this.CarriersRepository.findOneByName(name);
+    if (found) {
+      return found
+    } else {
+      return this.CarriersRepository.create(createAcountDto)
+    }
   }
 
   async findAll()

@@ -11,22 +11,29 @@ import { UpdateLobDto } from "./dto/update-lob.dto";
 export class LOBRepository {
   constructor(
     @InjectModel('LOB')
-    private policyModel: Model<LOBDocument>
+    private lobModel: Model<LOBDocument>
   ) { }
 
   getModelInstance(): Model<LOBDocument> {
-    return this.policyModel
+    return this.lobModel
   }
 
   async findOne(
     _id: mongoose.Types.ObjectId)
     : Promise<LOBDocument> {
-    return this.policyModel.findById({ _id })
+    return this.lobModel.findById({ _id })
 
   }
 
+  async findOneByName(
+    name: string)
+    : Promise<LOBDocument> {
+    return this.lobModel
+      .findOne({ name })
+  }
+
   async findAll(): Promise<ILOB[]> {
-    const policies = await this.policyModel.find({})
+    const policies = await this.lobModel.find({})
     return policies.map(pol => CreateLobDto.fromEntity(pol))
   }
 
@@ -34,7 +41,7 @@ export class LOBRepository {
     createLOBDto: CreateLobDto)
     : Promise<ILOB> {
     const data = CreateLobDto.toEntity(createLOBDto);
-    const newLOB = new this.policyModel(data);
+    const newLOB = new this.lobModel(data);
     const createdLOB = await newLOB.save();
     return CreateLobDto.fromEntity(createdLOB)
   }
@@ -44,7 +51,7 @@ export class LOBRepository {
     _id: mongoose.Types.ObjectId,
     updatedData: UpdateLobDto,
   ): Promise<ILOB> {
-    const updatedLOB = await this.policyModel.findOneAndUpdate(
+    const updatedLOB = await this.lobModel.findOneAndUpdate(
       { _id },
       updatedData,
       {
@@ -57,7 +64,7 @@ export class LOBRepository {
   async deleteOne(
     _id: mongoose.Types.ObjectId
   ): Promise<void> {
-    await this.policyModel.deleteOne({ _id });
+    await this.lobModel.deleteOne({ _id });
     return
   }
 }

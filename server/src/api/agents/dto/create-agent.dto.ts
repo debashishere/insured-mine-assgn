@@ -25,8 +25,7 @@ export class CreateAgentDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  producer: string;
-
+  producers: string[];
 
 
 
@@ -34,22 +33,22 @@ export class CreateAgentDto {
     const it = new CreateAgentDto();
     it._id = dto._id;
     it.name = dto.name;
-    it.producer = dto.producer;
+    it.producers = dto.producers;
     return it;
   }
 
-  public static FromEntity(entity: AgentDocument): IAgent {
+  public static fromEntity(entity: AgentDocument): IAgent {
     return this.from({
       _id: entity._id,
       name: entity.name,
-      producer: entity.producer,
+      producers: entity.producers,
     });
   }
 
   public static toEntity(dto: CreateAgentDto) {
     const it = new CreateAgentDto();
     it.name = dto.name;
-    it.producer = dto.producer;
+    it.producers = dto.producers;
     return it;
   }
 

@@ -7,11 +7,11 @@ export type AgentDocument = Agent & Document;
 @Schema({ timestamps: true })
 export class Agent implements IAgent {
 
-  @Prop()
+  @Prop({ unique: true })
   name: string;
 
   @Prop()
-  producer: string;
+  producers: string[];
 
 }
 

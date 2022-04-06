@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  IsArray,
   IsEnum,
   IsMongoId,
   IsNotEmpty,
@@ -35,10 +34,10 @@ export class CreatePolicyDto {
   @ApiProperty()
   availableMode: POLICY_MODE[];
 
-  @IsOptional()
-  @ApiProperty()
-  @IsArray()
-  accounts?: mongoose.Types.ObjectId[];
+  // @IsOptional()
+  // @ApiProperty()
+  // @IsArray()
+  // accounts?: mongoose.Types.ObjectId[];
 
 
   public static from(dto: CreatePolicyDto) {
@@ -47,7 +46,7 @@ export class CreatePolicyDto {
     it.policy_num = dto.policy_num
     it.policy_type = dto.policy_type
     it.availableMode = dto.availableMode
-    it.accounts = dto.accounts
+    // it.accounts = dto.accounts
     return it;
   }
 
@@ -57,7 +56,7 @@ export class CreatePolicyDto {
       policy_num: entity.policy_num,
       policy_type: entity.policy_type,
       availableMode: entity.availableMode,
-      accounts: entity.accounts,
+      // accounts: entity.accounts,
     });
   }
 
@@ -66,7 +65,7 @@ export class CreatePolicyDto {
     it.policy_num = dto.policy_num
     it.policy_type = dto.policy_type
     it.availableMode = dto.availableMode
-    it.accounts = dto.accounts
+    // it.accounts = dto.accounts
     return it;
   }
 

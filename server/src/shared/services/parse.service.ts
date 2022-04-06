@@ -15,46 +15,18 @@ import { AccountsService } from "../../api/accounts/acounts.service";
 import { POLICY_TYPE } from "../../api/policies/schema/policy-type.enum";
 import { CreatePolicyDto } from "../../api/policies/dto/create-policy.dto";
 import { PoliciesService } from "../../api/policies/policies.service";
-
-
-interface CsvRow {
-  agent: string;
-  userType: string;
-  policy_mode: string;
-  producer: string;
-  policy_number: string;
-  premium_amount_written: string;
-  premium_amount: string;
-  policy_type: string;
-  company_name: string;
-  category_name: string;
-  policy_start_date: string;
-  policy_end_date: string;
-  csr: string;
-  account_name: string;
-  email: string;
-  gender: string;
-  firstname: string;
-  city: string;
-  account_type: string;
-  phone: string;
-  address: string;
-  state: string;
-  zip: string;
-  dob: string;
-
-}
-
-
-interface AccountArg {
-  user: mongoose.Types.ObjectId,
-  policy_id: mongoose.Types.ObjectId,
-  agent?: mongoose.Types.ObjectId,
-  row: CsvRow
-}
-// hasActive ClientPolicy
-// Active Client
-
+import { IAgent } from "../../api/agents/interface/agent.interface";
+import { CreateAgentDto } from "../../api/agents/dto/create-agent.dto";
+import { AgentsService } from "../../api/agents/agents.service";
+import { ICarrier } from "../../api/carriers/interfaces/carrier.interface";
+import { CreateCarrierDto } from "../../api/carriers/dto/create-carrier.dto";
+import { ILOB } from "../../api/lob/interface/lob.interface";
+import { CreateLobDto } from "../../api/lob/dto/create-lob.dto";
+import { CATAGORY_NAME } from "../../api/users/schema/catagory-name.enum";
+import { LOBService } from "../../api/lob/lob.service";
+import { CarriersService } from "../../api/carriers/carriers.service";
+import { CsvRow } from '../interfaces/csv-row.interface'
+import { AccountArg } from '../interfaces/account-arg.interface'
 
 
 @Injectable()
@@ -64,15 +36,18 @@ export class ParseService {
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
     private readonly policiesService: PoliciesService,
-
+    private readonly agentsService: AgentsService,
+    private readonly lobService: LOBService,
+    private readonly carriersService: CarriersService,
 
   ) { }
 
   parseTransform = async (file) => {
-    const Users = []
 
-
-    const pathToCsv = path.resolve(__dirname, '../../../', 'csv', file.filename)
+    const pathToCsv =
+      path.resolve(
+        __dirname, '../../../', 'csv', file.filename
+      )
 
     fs.createReadStream(pathToCsv)
       .pipe(csv.parse({ headers: true }))
@@ -83,33 +58,57 @@ export class ParseService {
       // Using the transform function from the formatting stream
       .transform(async (row, next): Promise<void> => {
         console.log(" transaform ", row)
+
+        // user
         const user = await this.toUser(row)
-        const createdUser = await this.usersService.create(user)
+        const createdUser =
+          await this.usersService.create(user)
         console.log(" created ", createdUser)
+
+        // agent
+        const agent = await this.toAgent(row);
+        const createdAgent =
+          await this.agentsService.create(agent);
+        console.log("created agent", createdAgent)
 
         // policy
         const policy = await this.toPolicy(row)
-        const createdPolicy = await this.policiesService.create(policy);
+        const createdPolicy =
+          await this.policiesService.create(policy);
         console.log(" createdPolicy ", createdPolicy)
 
         // account
         const args: AccountArg = {
           user: createdUser._id,
           policy_id: createdPolicy._id,
-          // TODO: Create agent
-          agent: createdUser._id,
+          agent: createdAgent._id,
           row,
         }
         const account = await this.toAccount(args);
-        const createdAcc = await this.accountsService.create(account)
+        const createdAcc =
+          await this.accountsService.create(account)
         console.log(" account ", createdAcc)
 
-        // TOD: Update ref in agents
+
+        //carrier
+        const carrier = await this.toCarrier(row);
+        const createdCarrier =
+          await this.carriersService.create(carrier)
+        console.log(" carrier ", createdCarrier)
+
+        // LOB
+        const lob = await this.toLOB(carrier._id, row);
+        const createdLOB = await this.lobService.create(lob)
+        console.log(" createdLOB ", createdLOB)
+
         // next(null,user)
 
       })
       .pipe(process.stdout)
-      .on('end', () => process.exit());
+      .on('end', async () => {
+        await this.removeCsv(pathToCsv)
+        process.exit()
+      });
   }
 
   async toUser(row: CsvRow) {
@@ -150,8 +149,11 @@ export class ParseService {
     const plicy_start = this.getFormatedDate(row.policy_start_date)
     const policy_end = this.getFormatedDate(row.policy_end_date);
     const policyMode = this.getPolicyMode(row.policy_mode);
-    const premium_amount_written = this.getAmount(row.premium_amount_written)
-    const premium_amount = this.getAmount(row.premium_amount)
+    const premium_amount_written
+      = this.getAmount(row.premium_amount_written)
+    const premium_amount
+      = this.getAmount(row.premium_amount)
+    const category_name = this.getLobName(row.category_name)
 
     const accData = {
       user,
@@ -159,12 +161,16 @@ export class ParseService {
       account_name: row.account_name,
       account_policies: [{
         policy_id,
+        producer: row.producer,
         premium_amount_written,
         premium_amount,
         plicy_start,
         policy_end,
         agent,
         policyMode,
+        company_name: row.company_name,
+        csr: row.csr,
+        category_name,
       }]
 
     }
@@ -172,7 +178,9 @@ export class ParseService {
     return account
   }
 
-  async toPolicy(row: CsvRow) {
+
+
+  toPolicy(row: CsvRow) {
     const policy_type = this.getPolicyType(row.policy_type);
     const availableMode = this.getPolicyMode(row.policy_mode)
     const policyData = {
@@ -185,7 +193,46 @@ export class ParseService {
     return policy
   }
 
-  // Helpers
+  toAgent(row: CsvRow) {
+    const agentData: IAgent = {
+      name: row.agent,
+      producers: [row.producer],
+    }
+    const agent = CreateAgentDto.toEntity(agentData);
+    return agent
+  }
+
+  toLOB(
+    carrier: mongoose.Types.ObjectId,
+    row: CsvRow) {
+    const name = this.getLobName(row.category_name)
+    const LOBData: ILOB = {
+      name,
+      carrier,
+    }
+    const agent = CreateLobDto.toEntity(LOBData);
+    return agent
+  }
+
+  toCarrier(row: CsvRow) {
+    const carrierData: ICarrier = {
+      name: row.company_name,
+      csrs: [row.csr],
+    }
+    const carrier = CreateCarrierDto.toEntity(carrierData);
+    return carrier
+  }
+
+
+
+  //************** */ HELPERS*********************
+
+  async removeCsv(path: string) {
+    fs.unlink(path, (err) => {
+      if (err) throw err
+      console.log('path/file.txt was deleted');
+    });
+  }
 
   getExt = (number: string): string | null => {
     const isExt = number.search('Ext');
@@ -242,6 +289,12 @@ export class ParseService {
 
   castToAccType(acc: string): ACCOUNT_TYPE {
     return <ACCOUNT_TYPE>acc;
+  }
+
+
+
+  getLobName(lob: string): CATAGORY_NAME {
+    return <CATAGORY_NAME>lob;
   }
 
   getPolicyMode(mode: string): POLICY_MODE {
