@@ -3,6 +3,7 @@ import { CarriersService } from './carriers.service';
 import { CarriersController } from './carriers.controller';
 import { CarrierSchema } from './schema/carrier.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CarriersRepository } from './carriers.repository';
 
 @Module({
   imports: [
@@ -14,6 +15,13 @@ import { MongooseModule } from '@nestjs/mongoose';
     )
   ],
   controllers: [CarriersController],
-  providers: [CarriersService]
+  providers: [
+    CarriersService,
+    CarriersRepository
+  ],
+  exports: [
+    CarriersService,
+    CarriersRepository
+  ]
 })
 export class CarriersModule { }

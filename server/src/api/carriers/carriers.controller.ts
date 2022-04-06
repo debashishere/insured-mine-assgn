@@ -1,11 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import * as mongoose from 'mongoose'
 import { CarriersService } from './carriers.service';
 import { CreateCarrierDto } from './dto/create-carrier.dto';
 import { UpdateCarrierDto } from './dto/update-carrier.dto';
 
-@Controller('carriers')
+@Controller('carrier')
 export class CarriersController {
-  constructor(private readonly carriersService: CarriersService) {}
+  constructor(
+    private readonly carriersService: CarriersService
+  ) { }
 
   @Post()
   create(@Body() createCarrierDto: CreateCarrierDto) {
@@ -17,18 +20,24 @@ export class CarriersController {
     return this.carriersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.carriersService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.carriersService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarrierDto: UpdateCarrierDto) {
-    return this.carriersService.update(+id, updateCarrierDto);
+  @Patch(':_id')
+  update(
+    @Param('_id')
+    _id: mongoose.Types.ObjectId,
+    @Body() updateCarrierDto: UpdateCarrierDto) {
+    return this.carriersService
+      .update(_id, updateCarrierDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.carriersService.remove(+id);
+  @Delete(':_id')
+  remove(
+    @Param('_id')
+    _id: mongoose.Types.ObjectId) {
+    return this.carriersService.remove(_id);
   }
 }

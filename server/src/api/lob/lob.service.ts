@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose'
 import { CreateLobDto } from './dto/create-lob.dto';
 import { UpdateLobDto } from './dto/update-lob.dto';
+import { ILOB } from './interface/lob.interface';
+import { LOBRepository } from './lob.repository';
+import { LOBDocument } from './schema/lob.schema';
+import * as mongoose from 'mongoose'
 
 @Injectable()
-export class LobService {
-  create(createLobDto: CreateLobDto) {
-    return 'This action adds a new lob';
+export class LOBService {
+  constructor(private readonly policiesRepository: LOBRepository) { }
+
+  getModelInstance(): Model<LOBDocument> {
+    return this.policiesRepository.getModelInstance()
   }
 
-  findAll() {
-    return `This action returns all lob`;
+  async create(
+    createLOBDto: CreateLobDto)
+    : Promise<ILOB> {
+    return this.policiesRepository.create(createLOBDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lob`;
+  async findAll()
+    : Promise<ILOB[]> {
+    return this.policiesRepository.findAll();
   }
 
-  update(id: number, updateLobDto: UpdateLobDto) {
-    return `This action updates a #${id} lob`;
+  async findOne(
+    _id: mongoose.Types.ObjectId)
+    : Promise<ILOB> {
+    return this.policiesRepository.findOne(_id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lob`;
+  async update(
+    _id: mongoose.Types.ObjectId,
+    updateLOBDto: UpdateLobDto)
+    : Promise<ILOB> {
+    return this.policiesRepository.update(_id, updateLOBDto);
+  }
+
+  async remove(_id: mongoose.Types.ObjectId) {
+    return this.policiesRepository.deleteOne(_id);
   }
 }

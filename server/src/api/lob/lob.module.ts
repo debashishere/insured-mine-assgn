@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LobService } from './lob.service';
+import { LOBService } from './lob.service';
 import { LobController } from './lob.controller';
 import { LOBSchema } from './schema/lob.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { LOBRepository } from './lob.repository';
 
 @Module({
   imports: [
@@ -14,6 +15,13 @@ import { MongooseModule } from '@nestjs/mongoose';
     )
   ],
   controllers: [LobController],
-  providers: [LobService]
+  providers: [
+    LOBService,
+    LOBRepository
+  ],
+  exports: [
+    LOBService,
+    LOBRepository
+  ]
 })
 export class LobModule { }

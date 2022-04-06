@@ -41,7 +41,7 @@ export class CreateCarrierDto {
     return it;
   }
 
-  public static FromEntity(entity: CarrierDocument): ICarrier {
+  public static fromEntity(entity: CarrierDocument): ICarrier {
     return this.from({
       _id: entity._id,
       name: entity.name,

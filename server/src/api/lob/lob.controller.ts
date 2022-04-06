@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LobService } from './lob.service';
+import { LOBService } from './lob.service';
 import { CreateLobDto } from './dto/create-lob.dto';
 import { UpdateLobDto } from './dto/update-lob.dto';
+import * as mongoose from 'mongoose'
 
 @Controller('lob')
 export class LobController {
-  constructor(private readonly lobService: LobService) {}
+  constructor(private readonly lobService: LOBService) { }
 
   @Post()
   create(@Body() createLobDto: CreateLobDto) {
@@ -17,18 +18,18 @@ export class LobController {
     return this.lobService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.lobService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.lobService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLobDto: UpdateLobDto) {
-    return this.lobService.update(+id, updateLobDto);
+  @Patch(':_id')
+  update(@Param('_id') _id: mongoose.Types.ObjectId, @Body() updateLobDto: UpdateLobDto) {
+    return this.lobService.update(_id, updateLobDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lobService.remove(+id);
+  @Delete(':_id')
+  remove(@Param('_id') _id: mongoose.Types.ObjectId) {
+    return this.lobService.remove(_id);
   }
 }

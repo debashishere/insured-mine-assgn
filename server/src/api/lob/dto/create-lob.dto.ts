@@ -30,7 +30,7 @@ export class CreateLobDto {
     return it;
   }
 
-  public static FromEntity(entity: LOBDocument): ILOB {
+  public static fromEntity(entity: LOBDocument): ILOB {
     return this.from({
       _id: entity._id,
       name: entity.name,
