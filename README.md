@@ -7,8 +7,11 @@ The repository stores solution for Insured Mine Assignment
 ## Starting the development environment
 
 1. Install [Docker](https://www.docker.com/get-started) on your system.
-2. Run `docker-compose up --build` from the terminal
-3. Go to `www.localhost:8000` for accesing the backend
+2. Clone the Repo
+3. cd into Root Dir
+4. Run `docker-compose up --build` from the terminal
+5. Run `docker-compose down` to tear down
+6. Go to `www.localhost:8000` for accesing the backend
 
 ## Running tests
 
