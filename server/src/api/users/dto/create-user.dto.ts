@@ -65,6 +65,11 @@ export class CreateUserDto {
   @ApiProperty({ required: false })
   type?: USER_TYPE
 
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  userType?: string
+
 
 
   public static from(dto: Partial<CreateUserDto>) {

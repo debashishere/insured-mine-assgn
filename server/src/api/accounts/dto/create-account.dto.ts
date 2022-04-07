@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
 import {
   IsArray,
   IsEnum,
@@ -25,10 +26,17 @@ export class CreateAccountDto {
   @IsMongoId()
   user: mongoose.Types.ObjectId
 
+  @Exclude()
   @IsEnum(ACCOUNT_TYPE)
-  @IsNotEmpty()
-  @ApiProperty()
-  account_type: ACCOUNT_TYPE
+  @IsOptional()
+  @ApiProperty({ required: false })
+  account_type?: ACCOUNT_TYPE
+
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false })
+  accountTypeStr?: string
 
   @IsNotEmpty()
   @IsString()
@@ -50,7 +58,9 @@ export class CreateAccountDto {
     return it;
   }
 
-  public static fromEntity(entity: AccountDocument): IAccount {
+  public static fromEntity(
+    entity: AccountDocument)
+    : IAccount {
     return this.from({
       _id: entity._id,
       user: entity.user,

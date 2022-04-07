@@ -27,6 +27,10 @@ export class CreateCarrierDto {
   @ApiProperty()
   csrs: string[];
 
+  @IsOptional()
+  @ApiProperty()
+  @IsArray()
+  lobs?: mongoose.Types.ObjectId[];
 
 
 
@@ -35,6 +39,7 @@ export class CreateCarrierDto {
     it._id = dto._id;
     it.name = dto.name;
     it.csrs = dto.csrs;
+    it.lobs = dto.lobs;
     return it;
   }
 
@@ -43,6 +48,7 @@ export class CreateCarrierDto {
       _id: entity._id,
       name: entity.name,
       csrs: entity.csrs,
+      lobs: entity.lobs,
     });
   }
 
@@ -50,6 +56,7 @@ export class CreateCarrierDto {
     const it = new CreateCarrierDto();
     it.name = dto.name;
     it.csrs = dto.csrs;
+    it.lobs = dto.lobs;
     return it;
   }
 

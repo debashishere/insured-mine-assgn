@@ -4,10 +4,10 @@ import { USER_TYPE } from "../../../../src/api/users/schema/user.type.enum";
 
 
 export const getUserStub = (): CreateUserDto => {
-  const data = CreateUserDto.toEntity({
+  const data = {
     firstName: 'Test First Name',
     email: 'test@gmail.com',
-    type: USER_TYPE.ACTIVE_CLIENT,
+    userType: USER_TYPE.ACTIVE_CLIENT,
     phone: [
       {
         tags: [PHONE_TAG.PRIMARY],
@@ -15,7 +15,7 @@ export const getUserStub = (): CreateUserDto => {
         Inumber: 917003637367,
       }
     ]
-  })
+  }
 
   return data
 }

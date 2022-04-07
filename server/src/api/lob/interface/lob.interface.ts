@@ -3,6 +3,6 @@ import * as mongoose from 'mongoose'
 
 export interface ILOB {
   _id?: mongoose.Types.ObjectId,
-  carrier: mongoose.Types.ObjectId,
-  name: CATAGORY_NAME,
+  name?: CATAGORY_NAME,
+  categoryName?: string;
 }

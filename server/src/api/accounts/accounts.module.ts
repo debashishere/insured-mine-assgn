@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AccountsController } from './accounts.controller';
 import { AccountsRepository } from './accounts.repositoy';
 import { AccountsService } from './acounts.service';
+import { CommonService } from '../../shared/services/common.service';
 import { UsersModule } from '../users/users.module';
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UsersModule } from '../users/users.module';
   controllers: [AccountsController],
   providers: [
     AccountsService,
-    AccountsRepository
+    AccountsRepository,
+    CommonService
   ],
   exports: [
     AccountsService,

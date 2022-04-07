@@ -21,6 +21,7 @@ import { PoliciesService } from "../../../src/api/policies/policies.service"
 import { AgentsService } from "../../../src/api/agents/agents.service"
 import { LOBService } from "../../../src/api/lob/lob.service"
 import { CarriersService } from "../../../src/api/carriers/carriers.service"
+import { CommonService } from "../../../src/shared/services/common.service"
 import { AccountsRepository } from "../../../src/api/accounts/accounts.repositoy"
 
 describe('UserService', () => {
@@ -48,6 +49,7 @@ describe('UserService', () => {
       providers: [
         UsersRepository,
         UsersService,
+        CommonService,
       ]
     }).compile()
     service = module.get<UsersService>(UsersService);
@@ -68,6 +70,7 @@ describe('UserService', () => {
     describe(`CreateUser`, () => {
       it('createUser: should create and return a User', async () => {
         const UserData = getUserStub();
+        console.log(" CREATE ", UserData)
         createdUser = await service.create(UserData);
         expect(createdUser._id.toString().length).toEqual(24);
 

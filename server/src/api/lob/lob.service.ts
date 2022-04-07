@@ -6,13 +6,14 @@ import { ILOB } from './interface/lob.interface';
 import { LOBRepository } from './lob.repository';
 import { LOBDocument } from './schema/lob.schema';
 import * as mongoose from 'mongoose'
-import { CarriersService } from '../carriers/carriers.service';
+import { CATAGORY_NAME } from '../users/schema/catagory-name.enum';
+import { CommonService } from '../../shared/services/common.service';
 
 @Injectable()
 export class LOBService {
   constructor(
     private readonly lobRepository: LOBRepository,
-    private readonly carriersService: CarriersService,
+    private readonly commonService: CommonService,
   ) { }
 
   getModelInstance(): Model<LOBDocument> {
@@ -22,12 +23,13 @@ export class LOBService {
   async create(
     createLOBDto: CreateLobDto)
     : Promise<ILOB> {
-    const { name, carrier } = createLOBDto;
-    const foundCarrier = await this.carriersService.findOne(carrier)
-    if (!foundCarrier) {
-      throw new BadRequestException(`Carrier not found.`)
+    const { name, categoryName } = createLOBDto;
+
+    if (!categoryName) {
+      throw new BadRequestException(`LOB Name is a required field.`)
     }
-    const foundLOB = await this.lobRepository.findOneByName(name);
+    createLOBDto.name = this.commonService.getLOBNameEnum(categoryName)
+    const foundLOB = await this.lobRepository.findOneByName(createLOBDto.name);
     if (foundLOB) {
       return foundLOB
     } else {
@@ -35,6 +37,27 @@ export class LOBService {
     }
   }
 
+  // getLOBNameEnum(name: string): CATAGORY_NAME {
+  //   const nameStr = name
+  //     .match(/[a-zA-Z]+/g)
+  //     .join()
+  //     .toLowerCase()
+  //   // replace , chars
+  //   const cleanName = this.commonService
+  //     .replaceAll(nameStr, ',', '')
+  //   let compVal: string;
+
+  //   for (const value of Object.values(CATAGORY_NAME)) {
+  //     compVal = this.commonService
+  //       .replaceAll(value, '_', '')
+  //       .toLocaleLowerCase();
+  //     if (compVal === cleanName) {
+  //       return CATAGORY_NAME[value];
+  //     }
+  //   }
+  //   throw new BadRequestException(`LOB Name Not Found.`)
+
+  // }
 
   async findAll()
     : Promise<ILOB[]> {

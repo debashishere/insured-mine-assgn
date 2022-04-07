@@ -12,6 +12,8 @@ The repository stores solution for Insured Mine Assignment
 
 ## Running tests
 
+- Using JEST for Testing
+
 ### Backend tests
 
 ```shell
@@ -44,3 +46,9 @@ docker-compose run server /bin/sh -c "npm run test:unit"
   - api/lobs
 - Agent
   - api/agents
+
+## Logs
+
+- Using Wintson for Logging into File
+- logging error level logs to error.log
+- logging all logs into combined.log file

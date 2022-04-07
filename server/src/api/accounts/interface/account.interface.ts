@@ -6,7 +6,10 @@ import { AccountPolicy } from "../schema/account-policy.schema";
 export interface IAccount {
   _id?: mongoose.Types.ObjectId;
   user: mongoose.Types.ObjectId;
-  account_type: ACCOUNT_TYPE;
+
+  accountTypeStr?: string;
+  accountType?: ACCOUNT_TYPE;
+
   account_name: string;
   account_policies?: AccountPolicy[];
 }

@@ -1,9 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
 import {
   IsEnum,
   IsMongoId,
-  IsNotEmpty,
   IsOptional,
+  IsString,
 } from "class-validator";
 import * as mongoose from 'mongoose'
 import { CATAGORY_NAME } from "../../users/schema/catagory-name.enum";
@@ -17,22 +18,25 @@ export class CreateLobDto {
   @IsMongoId()
   _id?: mongoose.Types.ObjectId;
 
-  @IsNotEmpty()
-  @IsEnum(CATAGORY_NAME)
+  // @IsNotEmpty()
+  // @IsEnum(CATAGORY_NAME)
+  @IsOptional()
+  @IsString()
   @ApiProperty()
-  name: CATAGORY_NAME
+  categoryName?: string;
 
-  @IsMongoId()
-  @IsNotEmpty()
-  @ApiProperty()
-  carrier: mongoose.Types.ObjectId
+  @Exclude()
+  @IsOptional()
+  @IsEnum(CATAGORY_NAME)
+  @ApiProperty({ required: false })
+  name?: CATAGORY_NAME;
+
 
 
   public static from(dto: CreateLobDto) {
     const it = new CreateLobDto();
     it._id = dto._id;
     it.name = dto.name;
-    it.carrier = dto.carrier
     return it;
   }
 
@@ -40,14 +44,12 @@ export class CreateLobDto {
     return this.from({
       _id: entity._id,
       name: entity.name,
-      carrier: entity.carrier
     });
   }
 
   public static toEntity(dto: CreateLobDto) {
     const it = new CreateLobDto();
     it.name = dto.name
-    it.carrier = dto.carrier
     return it;
   }
 

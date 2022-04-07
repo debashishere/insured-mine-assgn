@@ -4,6 +4,7 @@ import { LobController } from './lob.controller';
 import { LOBSchema } from './schema/lob.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LOBRepository } from './lob.repository';
+import { CommonService } from '../../shared/services/common.service';
 import { CarriersModule } from '../carriers/carriers.module';
 
 @Module({
@@ -14,12 +15,12 @@ import { CarriersModule } from '../carriers/carriers.module';
         schema: LOBSchema
       }]
     ),
-    CarriersModule
   ],
   controllers: [LobController],
   providers: [
     LOBService,
-    LOBRepository
+    LOBRepository,
+    CommonService
   ],
   exports: [
     MongooseModule.forFeature(

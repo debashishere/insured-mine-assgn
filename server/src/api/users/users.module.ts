@@ -9,12 +9,9 @@ import { ParseService } from '../../shared/services/parse.service';
 import { AccountsModule } from '../accounts/accounts.module';
 import { PoliciesModule } from '../policies/policies.module';
 import { AgentsModule } from '../agents/agents.module';
-import { LOBService } from '../lob/lob.service';
-import { CarriersService } from '../carriers/carriers.service';
-import { LOBRepository } from '../lob/lob.repository';
-import { CarriersRepository } from '../carriers/carriers.repository';
 import { LobModule } from '../lob/lob.module';
 import { CarriersModule } from '../carriers/carriers.module';
+import { CommonService } from '../../shared/services/common.service';
 
 @Module({
   imports: [
@@ -30,7 +27,7 @@ import { CarriersModule } from '../carriers/carriers.module';
     AgentsModule,
     LobModule,
     CarriersModule,
-    forwardRef(() => ParsesModule)
+    forwardRef(() => ParsesModule),
   ],
   controllers: [
     UsersController
@@ -39,6 +36,7 @@ import { CarriersModule } from '../carriers/carriers.module';
     UsersService,
     UsersRepository,
     ParseService,
+    CommonService,
   ],
   exports: [
     UsersService,

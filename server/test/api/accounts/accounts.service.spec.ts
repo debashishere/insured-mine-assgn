@@ -11,6 +11,7 @@ import { UsersService } from "../../../src/api/users/users.service"
 import { UsersModule } from "../../../src/api/users/users.module"
 import { getUserStub } from "../users/stubs/users.stub"
 import { IUser } from "../../../src/api/users/interface/users.interfaces"
+import { CommonService } from "../../../src/shared/services/common.service"
 import { CreateAccountDto } from "../../../src/api/accounts/dto/create-account.dto"
 
 describe('AccountService', () => {
@@ -31,7 +32,8 @@ describe('AccountService', () => {
       ],
       providers: [
         AccountsRepository,
-        AccountsService
+        AccountsService,
+        CommonService,
       ]
     }).compile()
     service = module.get<AccountsService>(AccountsService);
@@ -69,10 +71,10 @@ describe('AccountService', () => {
     describe(`CreateAccount`, () => {
       it('createAccount: should create and return a Account', async () => {
         const data = getAccountStub();
-        const newAcc = CreateAccountDto.toEntity({
+        const newAcc: CreateAccountDto = {
           ...data,
           user: createdUser._id,
-        })
+        }
         createdAccount = await service.create(newAcc);
         expect(createdAccount._id.toString().length).toEqual(24);
 

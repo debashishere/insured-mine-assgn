@@ -17,17 +17,17 @@ export class Carrier implements ICarrier {
   @Prop()
   csrs: string[];
 
-  // @Prop({
-  //   type: [
-  //     {
-  //       type: mongoose.Types.ObjectId,
-  //       ref: 'LOB'
-  //     }
-  //   ],
-  //   required: false,
-  //   default: []
-  // })
-  // lobs: mongoose.Types.ObjectId[];
+  @Prop({
+    type: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'LOB'
+      }
+    ],
+    required: false,
+    default: []
+  })
+  lobs?: mongoose.Types.ObjectId[];
 
 }
 

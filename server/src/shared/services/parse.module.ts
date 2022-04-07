@@ -15,6 +15,7 @@ import { LOBService } from '../../api/lob/lob.service';
 import { LobModule } from '../../api/lob/lob.module';
 import { CarriersModule } from '../../api/carriers/carriers.module';
 import { CarriersService } from '../../api/carriers/carriers.service';
+import { CommonService } from './common.service'
 import { CarriersRepository } from '../../api/carriers/carriers.repository';
 
 @Module({
@@ -28,6 +29,7 @@ import { CarriersRepository } from '../../api/carriers/carriers.repository';
   ],
 
   providers: [
+    CommonService,
     ParseService,
     UsersService,
     AccountsService,

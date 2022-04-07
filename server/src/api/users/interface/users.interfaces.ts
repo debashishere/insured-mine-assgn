@@ -13,5 +13,6 @@ export interface IUser {
   address?: IAddress[];
   gender?: GENDER;
   type?: USER_TYPE;
+  userType?: string;
 
 }

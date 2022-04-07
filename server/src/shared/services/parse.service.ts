@@ -2,14 +2,9 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
-import { CreateUserDto } from "../../api/users/dto/create-user.dto";
 import { PHONE_TAG } from "../../api/users/schema/phone-tag.enum";
 import { GENDER } from "../../api/users/schema/gender.enum";
-import { USER_TYPE } from "../../api/users/schema/user.type.enum";
 import { UsersService } from "../../api/users/users.service";
-import { CreateAccountDto } from "../../api/accounts/dto/create-account.dto";
-import * as mongoose from 'mongoose'
-import { ACCOUNT_TYPE } from "../../api/accounts/schema/account.type.enum";
 import { POLICY_MODE } from "../../api/policies/schema/policy-mode.enum";
 import { AccountsService } from "../../api/accounts/acounts.service";
 import { POLICY_TYPE } from "../../api/policies/schema/policy-type.enum";
@@ -19,14 +14,13 @@ import { IAgent } from "../../api/agents/interface/agent.interface";
 import { CreateAgentDto } from "../../api/agents/dto/create-agent.dto";
 import { AgentsService } from "../../api/agents/agents.service";
 import { ICarrier } from "../../api/carriers/interfaces/carrier.interface";
-import { CreateCarrierDto } from "../../api/carriers/dto/create-carrier.dto";
 import { ILOB } from "../../api/lob/interface/lob.interface";
-import { CreateLobDto } from "../../api/lob/dto/create-lob.dto";
-import { CATAGORY_NAME } from "../../api/users/schema/catagory-name.enum";
 import { LOBService } from "../../api/lob/lob.service";
 import { CarriersService } from "../../api/carriers/carriers.service";
 import { CsvRow } from '../interfaces/csv-row.interface'
 import { AccountArg } from '../interfaces/account-arg.interface'
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Injectable()
 export class ParseService {
@@ -38,7 +32,7 @@ export class ParseService {
     private readonly agentsService: AgentsService,
     private readonly lobService: LOBService,
     private readonly carriersService: CarriersService,
-
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) { }
 
   parseTransform = async (file) => {
@@ -56,25 +50,25 @@ export class ParseService {
       )
       // Using the transform function from the formatting stream
       .transform(async (row, next): Promise<void> => {
-        console.log(" ROW NUM ", count,)
-
+        this.logger.info(`ROW NUMBER ${count}, DATA ${JSON.stringify(row)}`)
         // user
         const user = await this.toUser(row)
         const createdUser =
           await this.usersService.create(user)
-        console.log(`Created User count ${count} Id ${createdUser._id}`)
+        this.logger.info(`Created User count ${count} Id ${createdUser._id}`)
 
         // agent
         const agent = this.toAgent(row);
         const createdAgent =
           await this.agentsService.create(agent);
-        console.log(`created agent count ${count} Id ${createdAgent._id}`)
+        this.logger.info(`Created agent count ${count} Id ${createdAgent._id}`)
 
         // policy
         const policy = this.toPolicy(row)
         const createdPolicy =
           await this.policiesService.create(policy);
-        console.log(`Created Policy  count ${count} Id, ${createdPolicy._id}`)
+        console.log(`Parsing Row No : ${count}`)
+        this.logger.info(`Created Policy  count ${count} Id, ${createdPolicy._id}`)
 
         // account
         const args: AccountArg = {
@@ -86,20 +80,18 @@ export class ParseService {
         const account = await this.toAccount(args);
         const createdAcc =
           await this.accountsService.create(account)
-        console.log(`Created Account count ${count} Id ${createdAcc._id}`)
-
-
-        //carrier
-        const carrier = this.toCarrier(row);
-        const createdCarrier =
-          await this.carriersService.create(carrier)
-        console.log(`Created Carrier count ${count} Id ${createdCarrier._id}`)
+        this.logger.info(`Created Account count ${count} Id ${createdAcc._id}`)
 
         // LOB
-        const lob = this.toLOB(createdCarrier._id, row);
+        const lob = this.toLOB(row);
         const createdLOB = await this.lobService.create(lob)
-        console.log(`Created  LOB  count ${count} Id ${createdLOB._id}`)
+        this.logger.info(`Created  LOB  count ${count} Id ${createdLOB._id}`)
 
+        //carrier
+        const carrier = this.toCarrier(createdLOB._id, row);
+        const createdCarrier =
+          await this.carriersService.create(carrier)
+        this.logger.info(`Created Carrier count ${count} Id ${createdCarrier._id}`)
 
         count++;
         return next()
@@ -117,7 +109,7 @@ export class ParseService {
     const Inumber = this.getInumber(row.phone);
     const dob = this.getFormatedDate(row.dob);
     const gender = this.getFormatedGender(row.gender);
-    const type = this.getUserType(row.userType)
+    const userType = row.userType
 
     const userData = {
       firstName: row.firstname,
@@ -138,15 +130,15 @@ export class ParseService {
       }],
       dob,
       gender,
-      type,
+      userType,
     }
-    const user = CreateUserDto.toEntity(userData);
-    return user
+    return userData
   }
 
   async toAccount(AccountArg: AccountArg) {
     const { user, policy_id, row, agent } = AccountArg
-    const account_type = this.getAccountType(row.account_type);
+    const accountTypeStr = row.account_type
+
     const plicy_start = this.getFormatedDate(row.policy_start_date)
     const policy_end = this.getFormatedDate(row.policy_end_date);
     const policyMode = this.getPolicyMode(row.policy_mode);
@@ -154,11 +146,11 @@ export class ParseService {
       = this.getAmount(row.premium_amount_written)
     const premium_amount
       = this.getAmount(row.premium_amount)
-    const category_name = this.getLobName(row.category_name)
+    const categoryNameStr = row.category_name
 
     const accData = {
       user,
-      account_type,
+      accountTypeStr,
       account_name: row.account_name,
       account_policies: [{
         policy_id,
@@ -171,12 +163,11 @@ export class ParseService {
         policyMode,
         company_name: row.company_name,
         csr: row.csr,
-        category_name,
+        categoryNameStr,
       }]
 
     }
-    const account = CreateAccountDto.toEntity(accData);
-    return account
+    return accData
   }
 
   toPolicy(row: CsvRow) {
@@ -202,24 +193,21 @@ export class ParseService {
   }
 
   toLOB(
-    carrier: mongoose.Types.ObjectId,
     row: CsvRow) {
-    const name = this.getLobName(row.category_name)
+
     const LOBData: ILOB = {
-      name,
-      carrier,
+      categoryName: row.category_name,
     }
-    const lob = CreateLobDto.toEntity(LOBData);
-    return lob
+    return LOBData
   }
 
-  toCarrier(row: CsvRow) {
+  toCarrier(LOBId, row: CsvRow) {
     const carrierData: ICarrier = {
       name: row.company_name,
       csrs: [row.csr],
+      lobs: [LOBId]
     }
-    const carrier = CreateCarrierDto.toEntity(carrierData);
-    return carrier
+    return carrierData
   }
 
 
@@ -229,7 +217,7 @@ export class ParseService {
   async removeCsv(path: string) {
     fs.unlink(path, (err) => {
       if (err) throw err
-      console.log(`File was deleted`);
+      this.logger.info(`File was deleted`)
 
     });
   }
@@ -264,33 +252,8 @@ export class ParseService {
     return this.castToGender(formated)
   }
 
-  getUserType = (type: string) => {
-    const formated = this.formatToEnum(type);
-    return this.castToType(formated)
-  }
-
   castToGender(g: string): GENDER {
     return <GENDER>g;
-  }
-
-  castToType(t: string): USER_TYPE {
-    return <USER_TYPE>t;
-  }
-
-
-  getAccountType = (type: string) => {
-    const formated = this.formatToEnum(type);
-    return this.castToAccType(formated)
-  }
-
-  castToAccType(acc: string): ACCOUNT_TYPE {
-    return <ACCOUNT_TYPE>acc;
-  }
-
-
-
-  getLobName(lob: string): CATAGORY_NAME {
-    return <CATAGORY_NAME>lob;
   }
 
   formatToEnum(data: string): string {

@@ -6,6 +6,7 @@ import { LOBDocument } from "./schema/lob.schema";
 import { CreateLobDto } from "./dto/create-lob.dto";
 import { ILOB } from "./interface/lob.interface";
 import { UpdateLobDto } from "./dto/update-lob.dto";
+import { CATAGORY_NAME } from "../users/schema/catagory-name.enum";
 
 @Injectable()
 export class LOBRepository {
@@ -26,7 +27,7 @@ export class LOBRepository {
   }
 
   async findOneByName(
-    name: string)
+    name: CATAGORY_NAME)
     : Promise<LOBDocument> {
     return this.lobModel
       .findOne({ name })

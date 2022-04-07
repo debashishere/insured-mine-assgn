@@ -13,5 +13,6 @@ export interface IAccountPolicy {
   policyMode?: POLICY_MODE;
   company_name?: string;
   csr?: string;
-  category_name?: CATAGORY_NAME
+  category_name?: CATAGORY_NAME,
+  categoryNameStr?: string;
 }

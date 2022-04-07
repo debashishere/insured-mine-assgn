@@ -1,4 +1,4 @@
 export enum ACCOUNT_TYPE {
-  COMMERCIAL = "Commercial",
-  PERSONAL = "Personal"
+  COMMERCIAL = "COMMERCIAL",
+  PERSONAL = "PERSONAL"
 }
